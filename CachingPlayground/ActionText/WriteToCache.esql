@@ -1,0 +1,75 @@
+BROKER SCHEMA ActionText
+
+CREATE COMPUTE MODULE WriteToCache
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL CopyMessageHeaders();
+		-- CALL CopyEntireMessage();
+	
+		--Clear CACHE
+		SET CACHE = NULL;
+	
+		--Reference the first from stored in the Environment variables
+		DECLARE tableRow REFERENCE TO InputRoot.XMLNSC.TestMessage.EnvironmentVariables.TGF_TOPIC_STRUCTURE_ELEMENT.Row;
+		
+		--Create and reference the cache 
+		CREATE LASTCHILD OF CACHE NAME 'TopicStructure';
+		DECLARE tsCache REFERENCE TO CACHE.TopicStructure;
+		
+		DECLARE optionNo INT InputRoot.XMLNSC.TestMessage.Header.OptionNo;
+		
+		--Write to the Cache
+		IF optionNo = 1 THEN  
+			--This is the complicated option.... explicitly creating the Structure Code Folder
+			
+			--Temporary reference
+			DECLARE structureCode REFERENCE TO CACHE.TopicStructure;
+			
+			WHILE LASTMOVE(tableRow) DO
+				-- create new Topic Structure Code Folder
+				IF NOT EXISTS(tsCache.{tableRow.TOPIC_STRUCTURE_CODE}[]) THEN
+					CREATE LASTCHILD OF tsCache AS structureCode NAME tableRow.TOPIC_STRUCTURE_CODE;
+				END IF;
+				
+				CREATE LASTCHILD OF structureCode NAME  'TOPIC_ELEMENT_CODE'
+					VALUE tableRow.TOPIC_ELEMENT_CODE;
+				
+				MOVE tableRow NEXTSIBLING;
+			END WHILE;
+		
+		ELSE
+			--This is the easy option
+			
+			WHILE LASTMOVE(tableRow) DO
+				CREATE LASTCHILD OF tsCache.{tableRow.TOPIC_STRUCTURE_CODE}  
+					NAME  'TOPIC_ELEMENT_CODE'
+					VALUE tableRow.TOPIC_ELEMENT_CODE;
+				
+				MOVE tableRow NEXTSIBLING;
+			END WHILE;
+			
+		END IF;
+	
+		--Transfer CACHE to OutputRoot
+		CREATE LASTCHILD OF OutputRoot DOMAIN 'XMLNSC';
+		SET OutputRoot.XMLNSC.CACHE = CACHE;
+		
+		
+		RETURN TRUE;
+	END;
+	
+		CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+
+END MODULE;
