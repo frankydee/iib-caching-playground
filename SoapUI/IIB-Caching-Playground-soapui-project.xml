@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="c11c422b-f928-4dc5-9dab-ebd15a801471" activeEnvironment="Default" name="Playground" resourceRoot="" soapui-version="5.4.0" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:testSuite id="5bc4c8fe-2a17-4587-b872-b818b3bc01c7" name="ESQL Cache Test Suite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="44770dea-99fd-4b51-97b4-63c2bde29451" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Topic Structure Cache - TC1" searchProperties="true"><con:settings/><con:testStep type="httprequest" name="Write To Cache" id="8893ac56-21ec-448f-9e65-77e6399c1f96"><con:settings/><con:config method="POST" xsi:type="con:HttpRequest" id="ecd6822e-6a1a-45e4-bdaa-8b28cde26d7d" name="Write To Cache" postQueryString="false" mediaType="application/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:7800/TopicStructureWrite</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<TestMessage>
+	<Header>
+		<Operation>write</Operation>
+		<OptionNo>1</OptionNo>
+	</Header>
+	<EnvironmentVariables>
+		<TGF_TOPIC_STRUCTURE_ELEMENT>
+			<Row>
+				<TOPIC_STRUCTURE_CODE>STANDARD</TOPIC_STRUCTURE_CODE>
+				<TOPIC_ELEMENT_CODE>EL1</TOPIC_ELEMENT_CODE>
+				<TOPIC_ELEMENT_ORDER>1</TOPIC_ELEMENT_ORDER>
+			</Row>
+			<Row>
+				<TOPIC_STRUCTURE_CODE>STANDARD</TOPIC_STRUCTURE_CODE>
+				<TOPIC_ELEMENT_CODE>EL2</TOPIC_ELEMENT_CODE>
+				<TOPIC_ELEMENT_ORDER>2</TOPIC_ELEMENT_ORDER>
+			</Row>
+			<Row>
+				<TOPIC_STRUCTURE_CODE>GRANULAR</TOPIC_STRUCTURE_CODE>
+				<TOPIC_ELEMENT_CODE>EL1</TOPIC_ELEMENT_CODE>
+				<TOPIC_ELEMENT_ORDER>1</TOPIC_ELEMENT_ORDER>
+			</Row>
+			<Row>
+				<TOPIC_STRUCTURE_CODE>GRANULAR</TOPIC_STRUCTURE_CODE>
+				<TOPIC_ELEMENT_CODE>EL2</TOPIC_ELEMENT_CODE>
+				<TOPIC_ELEMENT_ORDER>2</TOPIC_ELEMENT_ORDER>
+			</Row>
+			<Row>
+				<TOPIC_STRUCTURE_CODE>GRANULAR</TOPIC_STRUCTURE_CODE>
+				<TOPIC_ELEMENT_CODE>EL3</TOPIC_ELEMENT_CODE>
+				<TOPIC_ELEMENT_ORDER>3</TOPIC_ELEMENT_ORDER>
+			</Row>
+		</TGF_TOPIC_STRUCTURE_ELEMENT>
+	</EnvironmentVariables>
+</TestMessage>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:testStep type="httprequest" name="Read From Cache" id="fe13cc56-a4c3-4bd9-bb6e-111216314f4a"><con:settings/><con:config method="POST" xsi:type="con:HttpRequest" id="ecd6822e-6a1a-45e4-bdaa-8b28cde26d7d" name="Read From Cache" postQueryString="false" mediaType="application/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:7800/TopicStructureRead</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<TestMessage>
+	<Header>
+		<OptionNo>1</OptionNo>
+	</Header>
+	<EnvironmentVariables>
+		<FaultTopicStructure>GRANULAR</FaultTopicStructure>
+	</EnvironmentVariables>
+</TestMessage>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
